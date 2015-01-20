@@ -7,8 +7,14 @@ function wordGrab() {
   http.get('http://randomword.setgetgo.com/get.php', function(res) {
     res.on('data', function(buf) {
       var msg = String(buf);
-      if (msg.indexOf('\n'))
+      if (msg.indexOf('\n')) {
         console.log(msg.slice(0, -1));
+        twit.get('search/tweets', { q: msg.slice(0, -1), count: 1 }, function(err, data, response) {
+          if (data.statuses[0]) {
+            console.log(data.statuses[0].text)
+          }
+        })
+      }
     });
   });
 }
@@ -32,6 +38,7 @@ var server = http.createServer(function(req, res) {
 module.exports = server;
 
 if (!module.parent) {
+  var twit = new Twit(config1);
   server.listen(3000, function() {
     console.log('Listening on port 3000');
     setInterval(function() {
