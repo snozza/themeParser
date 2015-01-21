@@ -1,7 +1,8 @@
 var http = require('http');
 var utils = require('util');
 var Twit = require('twit');
-var config1 = require('./node_modules/twit/config1')
+var config1 = require('./node_modules/twit/config1');
+var request = require('request')
 
 function wordGrab() {
   http.get('http://randomword.setgetgo.com/get.php', function(res) {
@@ -11,12 +12,18 @@ function wordGrab() {
         console.log(msg.slice(0, -1));
         twit.get('search/tweets', { q: msg.slice(0, -1), count: 1 }, function(err, data, response) {
           if (data.statuses[0]) {
-            console.log(data.statuses[0].text)
+            sendTweet(data.statuses[0].text)
           }
         })
       }
     });
   });
+}
+
+function sendTweet(tweet) {
+  request.post("http://localhost:4567/new", {form: {body: tweet}}, function(err, res, body) {
+    console.log(body)
+  })
 }
 
 var server = http.createServer(function(req, res) {
