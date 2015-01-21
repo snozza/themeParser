@@ -9,7 +9,6 @@
     <div class="wrapper">
       <div id="container">
         <ul id="links">
-          <li class="link">Hello</li>
         </ul>
       </div>
     </div>  
@@ -17,10 +16,16 @@
     <script>
       $(document).on('ready', function() {
         setInterval(function() {
-          $.get('http://localhost:4567/check', function(res) {
-            console.log(res)
+          $('#links').empty().fadeOut('slow', function() {
+            $.getJSON('http://localhost:4567/check', function(post) {
+              $.each(post, function(index, post) {
+                $('#links').append('<li class=link>' + post.body + '</li>')
+              });
+            }).then(function() {
+              $('#links').fadeIn('slow');
+            });
           });
-          }, 5000)
+          }, 10000)
       });
     </script> 
   </body>
