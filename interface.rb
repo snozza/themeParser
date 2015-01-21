@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'net/http'
 require 'data_mapper'
+require 'date'
 
 require_relative './lib/models/tweet'
 require_relative './lib/data_mapper_setup'
@@ -13,5 +14,12 @@ end
 
 post '/new' do
   tweet = Tweet.create(:body => params[:body])
-  p tweet
+end
+
+get '/check' do
+  Tweet.all.to_json
+  timeSearch = DateTime.new(Time.now.to_i - 500)
+  p timeSearch
+  p DateTime.now
+  Tweet.all.to_json
 end

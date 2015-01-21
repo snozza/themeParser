@@ -17,5 +17,11 @@
     <script>
       $(document).on('ready', function() {
         setInterval(function() {
+          $.get('http://localhost:4567/check', function(res) {
+            console.log(res)
+          });
+          }, 5000)
+      });
+    </script> 
   </body>
 </html>

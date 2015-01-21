@@ -49,7 +49,7 @@ if (!module.parent) {
   server.listen(3000, function() {
     console.log('Listening on port 3000');
     setInterval(function() {
-      wordGrab()}, 10000 
+      wordGrab()}, 20000 
     );
   });
 }
