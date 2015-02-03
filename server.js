@@ -3,6 +3,10 @@ var utils = require('util');
 var Twit = require('twit');
 var config1 = require('./node_modules/twit/config1');
 var request = require('request')
+var mongoose = require('mongoose');
+
+var dbURI = process.env.MONGOHQ_URL || 'mongodb://localhost/twitter_development'
+var db = mongoose.connect(dbURI);
 
 function wordGrab() {
   http.get('http://randomword.setgetgo.com/get.php', function(res) {
@@ -11,7 +15,8 @@ function wordGrab() {
       if (msg.indexOf('\n')) {
         console.log(msg.slice(0, -1));
         twit.get('search/tweets', { q: msg.slice(0, -1), count: 1 }, function(err, data, response) {
-          if (data.statuses[0]) {
+          if (data.statuses[0] && data.statuses[0].coordinates != null) {
+            console.log(data.statuses[0].text);
             sendTweet(data.statuses[0].text)
           }
         })
