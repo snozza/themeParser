@@ -13,10 +13,8 @@ function wordGrab() {
     res.on('data', function(buf) {
       var msg = String(buf);
       if (msg.indexOf('\n')) {
-        console.log(msg.slice(0, -1));
         twit.get('search/tweets', { q: msg.slice(0, -1), count: 1 }, function(err, data, response) {
           if (data.statuses[0] && data.statuses[0].coordinates != null) {
-            console.log(data.statuses[0].text);
             sendTweet(data.statuses[0].text)
           }
         })
@@ -47,8 +45,6 @@ var server = http.createServer(function(req, res) {
   }
 });
 
-module.exports = server;
-
 if (!module.parent) {
   var twit = new Twit(config1);
   server.listen(3000, function() {
@@ -58,4 +54,6 @@ if (!module.parent) {
     );
   });
 }
+
+module.exports = server;
 
