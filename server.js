@@ -1,33 +1,11 @@
 var http = require('http');
 var utils = require('util');
-var Twit = require('twit');
-var config1 = require('./node_modules/twit/config1');
-var request = require('request')
 var mongoose = require('mongoose');
+var wordGrab = require('./lib/parser').wordGrab;
 
 var dbURI = process.env.MONGOHQ_URL || 'mongodb://localhost/twitter_development'
 var db = mongoose.connect(dbURI);
 
-function wordGrab() {
-  http.get('http://randomword.setgetgo.com/get.php', function(res) {
-    res.on('data', function(buf) {
-      var msg = String(buf);
-      if (msg.indexOf('\n')) {
-        twit.get('search/tweets', { q: msg.slice(0, -1), count: 1 }, function(err, data, response) {
-          if (data.statuses[0] && data.statuses[0].coordinates != null) {
-            sendTweet(data.statuses[0].text)
-          }
-        })
-      }
-    });
-  });
-}
-
-function sendTweet(tweet) {
-  request.post("http://localhost:4567/new", {form: {body: tweet}}, function(err, res, body) {
-    console.log(body)
-  })
-}
 
 var server = http.createServer(function(req, res) {
   if (req.method === 'GET') {
@@ -46,7 +24,6 @@ var server = http.createServer(function(req, res) {
 });
 
 if (!module.parent) {
-  var twit = new Twit(config1);
   server.listen(3000, function() {
     console.log('Listening on port 3000');
     setInterval(function() {
